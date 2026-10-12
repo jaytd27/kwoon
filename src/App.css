@@ -789,7 +789,7 @@ textarea.form-field--text {
   transform-origin: 0 0;
 }
 
-.line-editor input {
+.line-editor__text {
   display: block;
   margin: 0;
   padding: 0 2px;
@@ -797,6 +797,99 @@ textarea.form-field--text {
   outline: 2px solid var(--kw-violet-700);
   background: var(--kw-page-surface);
   line-height: 1.25;
+  transform-origin: 0 0;
+}
+
+/* Style bar for the line being edited: font, size, bold, italic, colour. */
+.line-editor__bar {
+  bottom: calc(100% + 8px);
+  left: 0;
+  white-space: nowrap;
+}
+
+.line-editor__bar--below {
+  top: calc(100% + 8px);
+  bottom: auto;
+}
+
+.line-editor__font,
+.line-editor__size input {
+  height: 28px;
+  border: 0;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font: inherit;
+}
+
+.line-editor__font {
+  padding: 0 var(--kw-space-3);
+}
+
+.line-editor__font option {
+  background: var(--kw-float-bg);
+  color: var(--kw-float-fg);
+}
+
+.line-editor__size {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kw-space-2);
+  padding-right: var(--kw-space-2);
+  font-family: var(--kw-font-mono);
+}
+
+.line-editor__size input {
+  width: 56px;
+  padding: 0 var(--kw-space-2);
+  font-family: var(--kw-font-mono);
+}
+
+.line-editor__font:focus-visible,
+.line-editor__size input:focus-visible {
+  outline: 2px solid var(--kw-accent);
+  outline-offset: 0;
+}
+
+.line-editor__bold {
+  font-weight: 700;
+}
+
+.line-editor__italic {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: var(--kw-text-sm);
+}
+
+.line-editor__swatches {
+  display: flex;
+  gap: var(--kw-space-2);
+  padding: 0 var(--kw-space-2);
+}
+
+.line-editor__swatch {
+  width: 20px;
+  height: 20px;
+  border: none;
+  /* A faint rim keeps dark inks visible on the dark bar. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.line-editor__swatch[aria-checked='true'] {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 0 2px var(--kw-float-bg),
+    0 0 0 4px var(--kw-float-fg);
+}
+
+/* Light text (white headings on coloured bands) is edited on a dark ground. */
+.line-editor__text--light {
+  background: #333333;
+}
+
+.line-editor__bar--below ~ .line-editor__warning {
+  top: calc(100% + 54px);
 }
 
 .line-editor__warning {

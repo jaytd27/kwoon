@@ -21,6 +21,7 @@ import type {
   ResultMap,
   SearchHit,
   TextLine,
+  TextLineStyle,
   WatermarkSpec,
   WorkerReady,
   WorkerRequest,
@@ -210,8 +211,8 @@ export class PdfClient {
   }
 
   /** Replaces a line of page text (removing its glyphs) with `text`; empty text deletes the line. */
-  replaceTextLine(page: number, line: TextLine, text: string): Promise<DocState> {
-    return this.send({ type: 'replaceTextLine', page, line, text })
+  replaceTextLine(page: number, line: TextLine, text: string, style: TextLineStyle): Promise<DocState> {
+    return this.send({ type: 'replaceTextLine', page, line, text, style })
   }
 
   /** Renders the page with object number `id` at `scale` device pixels per point. */

@@ -29,6 +29,7 @@ import type {
   Rect,
   SearchHit,
   TextLine,
+  TextLineStyle,
   WatermarkSpec,
 } from './pdf/protocol'
 import { THEME_LABELS, getThemeMode, setThemeMode, type ThemeMode } from './theme/theme'
@@ -488,8 +489,8 @@ export default function App() {
   )
 
   const editTextLine = useCallback(
-    (pageId: number, line: TextLine, text: string) =>
-      void run("Couldn't change the text", async () => applyState(await pdf.replaceTextLine(pageId, line, text))),
+    (pageId: number, line: TextLine, text: string, style: TextLineStyle) =>
+      void run("Couldn't change the text", async () => applyState(await pdf.replaceTextLine(pageId, line, text, style))),
     [run, applyState],
   )
 

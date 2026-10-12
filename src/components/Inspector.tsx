@@ -32,7 +32,7 @@ const TOOL_HINTS: Partial<Record<Tool, string>> = {
   line: 'Drag on the page to draw.',
   arrow: 'Drag on the page to draw.',
   ink: 'Draw freehand on the page.',
-  editText: 'Click a line of text to change it, or clear it to delete the line. New text uses the closest standard font.',
+  editText: 'Click a line of text to change it, or clear it to delete the line. The bar above it sets font, size, bold, italic and colour.',
   redactText: 'Drag across text to mark it. Nothing is removed until you apply redactions.',
   redactArea: 'Drag a box over anything, including images. Nothing is removed until you apply redactions.',
 }

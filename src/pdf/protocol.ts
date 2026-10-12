@@ -135,6 +135,15 @@ export interface TextLine {
   font: { name: string; family: 'sans' | 'serif' | 'mono'; bold: boolean; italic: boolean }
 }
 
+/** How replacement text is written: a standard font, its size in points and its colour. */
+export interface TextLineStyle {
+  family: TextLine['font']['family']
+  bold: boolean
+  italic: boolean
+  size: number
+  color: RGB
+}
+
 /** One occurrence of a search term. */
 export interface SearchHit {
   /** Page id. */
@@ -197,7 +206,7 @@ export type WorkerRequest =
   | { type: 'textLines'; page: number }
   | { type: 'allAnnots' }
   | { type: 'pageTextChars'; page: number }
-  | { type: 'replaceTextLine'; page: number; line: TextLine; text: string }
+  | { type: 'replaceTextLine'; page: number; line: TextLine; text: string; style: TextLineStyle }
 
 export type OpenResult = { needsPassword: true } | ({ needsPassword: false; title: string | null } & DocState)
 

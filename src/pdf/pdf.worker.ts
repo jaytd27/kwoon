@@ -22,6 +22,7 @@ import type {
   SearchHit,
   TextFont,
   TextLine,
+  TextLineStyle,
   WatermarkSpec,
   WorkerReady,
   WorkerRequest,
@@ -930,7 +931,7 @@ const STANDARD_FONTS: Record<TextLine['font']['family'], [string, string, string
   mono: ['Courier', 'Courier-Bold', 'Courier-Oblique', 'Courier-BoldOblique'],
 }
 
-function standardFontFor({ family, bold, italic }: TextLine['font']): string {
+function standardFontFor({ family, bold, italic }: Pick<TextLineStyle, 'family' | 'bold' | 'italic'>): string {
   return STANDARD_FONTS[family][(bold ? 1 : 0) + (italic ? 2 : 0)]
 }
 
@@ -984,10 +985,10 @@ function textLines(pageId: number): TextLine[] {
 /**
  * Replaces a line of page text: removes its glyphs with a one-off redaction
  * (leaving any redaction marks the user has pending alone), then writes
- * `text` at the same baseline, angle, size and colour in the closest
- * standard font. Empty `text` just deletes the line.
+ * `text` at the same baseline and angle in the standard font, size and
+ * colour of `style`. Empty `text` just deletes the line.
  */
-function replaceTextLine(pageId: number, line: TextLine, text: string): DocState {
+function replaceTextLine(pageId: number, line: TextLine, text: string, style: TextLineStyle): DocState {
   textCache.get(pageId)?.destroy()
   textCache.delete(pageId)
   return mutate('Edit text', () => {
@@ -1010,7 +1011,7 @@ function replaceTextLine(pageId: number, line: TextLine, text: string): DocState
     eraser.applyRedaction(0, mupdf.PDFPage.REDACT_IMAGE_NONE, mupdf.PDFPage.REDACT_LINE_ART_NONE, mupdf.PDFPage.REDACT_TEXT_REMOVE)
 
     if (!text.trim()) return
-    const fontKey = addResource(d, obj, 'Font', 'KwoonEdit', d.addSimpleFont(new mupdf.Font(standardFontFor(line.font))))
+    const fontKey = addResource(d, obj, 'Font', 'KwoonEdit', d.addSimpleFont(new mupdf.Font(standardFontFor(style))))
     const [a, b, c, dd, e, f] = mupdf.Matrix.invert(page.getTransform())
     const [ox, oy] = [a * line.origin[0] + c * line.origin[1] + e, b * line.origin[0] + dd * line.origin[1] + f]
     // Along the baseline, and "up" (display y runs down), mapped into PDF space.
@@ -1018,11 +1019,11 @@ function replaceTextLine(pageId: number, line: TextLine, text: string): DocState
     const up = [a * line.dir[1] - c * line.dir[0], b * line.dir[1] - dd * line.dir[0]]
     const [rx, ry] = along.map((v) => v / Math.hypot(along[0], along[1]))
     const [ux, uy] = up.map((v) => v / Math.hypot(up[0], up[1]))
-    const [r, g, bl] = line.color
+    const [r, g, bl] = style.color
     appendContent(
       d,
       obj,
-      `BT /${fontKey} ${num(line.size)} Tf ${num(r)} ${num(g)} ${num(bl)} rg ` +
+      `BT /${fontKey} ${num(style.size)} Tf ${num(r)} ${num(g)} ${num(bl)} rg ` +
         `${num(rx)} ${num(ry)} ${num(ux)} ${num(uy)} ${num(ox)} ${num(oy)} Tm ${pdfString(text)} Tj ET`,
     )
   }, pageId)
@@ -1174,7 +1175,7 @@ function handle(req: WorkerRequest): { result: unknown; transfer?: Transferable[
     case 'pageTextChars':
       return { result: pageTextChars(req.page) }
     case 'replaceTextLine':
-      return { result: replaceTextLine(req.page, req.line, req.text) }
+      return { result: replaceTextLine(req.page, req.line, req.text, req.style) }
   }
 }
 

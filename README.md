@@ -15,7 +15,7 @@ Live: https://kwoon.pages.dev (deployed from `main`).
 - [x] Add content: text boxes (font, size, color), images (PNG, JPEG, WebP, GIF with transparency), drawn or typed signatures (saved for reuse), and text watermarks; resize handles for shapes and images
 - [x] True redaction: mark text or areas (or find & mark every match), then permanently remove the text, image pixels, graphics, annotations and form values underneath; downloading warns about unapplied marks
 - [x] OCR for scanned documents (Tesseract.js, in the browser): adds an invisible text layer so scans can be searched, selected, highlighted and redacted; 7 languages; skips pages that already have text
-- [x] In-place editing of existing text: click a line to change or delete it; new text keeps the position, angle, size and colour, in the closest standard font
+- [x] In-place editing of existing text: click a line to change or delete it, and restyle it (font, size, bold, italic, colour) from the bar above it; new text keeps the line's position and angle, and starts in its size and colour and the closest standard font
 
 ## Known limitations
 
